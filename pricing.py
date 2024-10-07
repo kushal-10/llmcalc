@@ -36,3 +36,4 @@ def fetch_prices():
     
 if __name__ == '__main__':
     fetch_prices()
+    
