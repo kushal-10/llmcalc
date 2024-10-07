@@ -1,0 +1,39 @@
+name: Fetch Prices
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  fetch-prices:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests
+
+      - name: Create data directory
+        run: mkdir -p data  
+
+      - name: Run fetch_prices script
+        run: python pricing.py  
+
+      - name: Commit and push CSV file
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/prices.csv
+          git commit -m "Add fetched prices CSV"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
